@@ -24,19 +24,19 @@ print(welcome_message)
 player_name = input("Enter player name: ")
 print(f"Player {player_name} started a game")
 
-#time.sleep(2)
+time.sleep(2)
 
 print("\nArranging prisonners to be hanged in a queue:")
-#false_loading(3)
+false_loading(3)
 print("\nChecking solidity of the ropes:")
-#false_loading()
+false_loading()
 profane = input("\nDo you want to include profane/offensive words in the game?\n(yes: y, no: n)")
 while profane not in ("y", "n"):
   profane = input("\nIncorrect entry\nDo you want to include profane/offensive words in the game?\n(yes: y, no: n)")
 profane = profane == 'y'
 print("\nIncluding offensive words: ", profane) 
 print("\nLoading words:")
-#false_loading()
+false_loading()
 
 ''' Loading words according to choice of the player:'''
 
@@ -59,19 +59,19 @@ print('\n\nGame ready')
 
 word=random.choice(WORDS)
 
-def play_loop(WORDS):
+def play_loop(WORDS, score):
   '''Replay or end game'''
   PLAY=input("Play once more?\n(yes: y ; no: n) ")
   while PLAY not in ("y", "n"):
     PLAY=input("\nIncorrect entry\nPlay once more?\n(yes: y ; no: n) ")
   PLAY=PLAY=="y"
   if PLAY:
-    hangman(random.choice(WORDS), GUESSED=[], COUNT=0)
+    hangman(random.choice(WORDS), GUESSED=[], COUNT=0, score=score)
   else:
     print("\nGame shutting off...")
     exit()
 
-def hangman(WORD, GUESSED=[], COUNT=0):
+def hangman(WORD, GUESSED=[], COUNT=0, score=0):
   limit=8
 
   print("Word:\n", "".join([letter if letter in GUESSED else '_' for letter in WORD]))
@@ -85,7 +85,7 @@ def hangman(WORD, GUESSED=[], COUNT=0):
     
   if guess in GUESSED:
     print("This letter was already guessed")
-    hangman(WORD, GUESSED, COUNT)
+    hangman(WORD, GUESSED, COUNT, score)
   else:
     GUESSED.append(guess)
   
@@ -96,12 +96,15 @@ def hangman(WORD, GUESSED=[], COUNT=0):
     if COUNT>=limit:
       print("WRONG\nThe prisonner has been hanged")
       print("The word was: ",WORD)
-      play_loop(WORDS)
+      print("Your score is still: ", score)
+      play_loop(WORDS, score)
   if "".join([letter if letter in GUESSED else "_" for letter in WORD])==WORD:
+    score+=1
     print("Congratulation, you found: ", WORD)
-    play_loop(WORDS)
+    print("Current score of ",player_name, " : ", score)
+    play_loop(WORDS, score)
   elif COUNT<limit:
-    hangman(WORD, GUESSED, COUNT)
+    hangman(WORD, GUESSED, COUNT, score)
 
 
 hangman(random.choice(WORDS)) 
